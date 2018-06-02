@@ -4,10 +4,13 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.helper.ItemTouchHelper
 import android.text.TextUtils
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import quintype.com.sampleroompaging.adapter.SampleAdapter
+import quintype.com.sampleroompaging.holder.SampleViewHolder
 import quintype.com.sampleroompaging.viewmodel.SampleViewModel
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
@@ -42,6 +45,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         activity_main_btn_add.setOnClickListener(this)
 
+        initSwipeToDelete()
+
 //        var sampleApi = NetworkVolleyRequest(
 //                NetworkVolleyRequest.RequestMethod.GET,
 //                SAMPLE_URL,
@@ -58,5 +63,17 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 //                    }
 //                }, NetworkVolleyRequest.ContentType.JSON
 //        ).execute()
+    }
+
+    private fun initSwipeToDelete() {
+        ItemTouchHelper(object : ItemTouchHelper.Callback() {
+            override fun getMovementFlags(recyclerView: RecyclerView?, viewHolder: RecyclerView.ViewHolder?): Int = makeMovementFlags(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT)
+
+            override fun onMove(recyclerView: RecyclerView?, viewHolder: RecyclerView.ViewHolder?, target: RecyclerView.ViewHolder?): Boolean = false
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder?, direction: Int) {
+                (viewHolder as SampleViewHolder)?.sampleData?.let { viewModel.remove(it) }
+            }
+        }).attachToRecyclerView(activity_main_rv_list)
     }
 }
