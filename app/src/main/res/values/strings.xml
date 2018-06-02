@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">SampleRoomPaging</string>
+    <string name="enter_name">Enter name</string>
+    <string name="add_name">Add</string>
 </resources>

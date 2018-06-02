@@ -4,11 +4,22 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.text.TextUtils
+import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import quintype.com.sampleroompaging.adapter.SampleAdapter
 import quintype.com.sampleroompaging.viewmodel.SampleViewModel
 
-open class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), View.OnClickListener {
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            R.id.activity_main_btn_add -> {
+                var name = activity_main_et_name?.text?.toString()
+                if (!TextUtils.isEmpty(name))
+                    viewModel.insert(name as String)
+            }
+        }
+    }
 
     private var SAMPLE_URL: String = ""
     private val headerMap = HashMap<String, String>()
@@ -29,6 +40,7 @@ open class MainActivity : AppCompatActivity() {
 
         viewModel.allSamples.observe(this, Observer(sampleAdapter::submitList))
 
+        activity_main_btn_add.setOnClickListener(this)
 
 //        var sampleApi = NetworkVolleyRequest(
 //                NetworkVolleyRequest.RequestMethod.GET,
